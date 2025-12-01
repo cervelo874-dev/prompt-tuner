@@ -3,7 +3,7 @@ import { Send, Loader2 } from 'lucide-react';
 import MessageBubble from './MessageBubble';
 import { useAITuner } from '../../hooks/useAITuner';
 
-const ChatInterface = ({ activeMode }) => {
+const ChatInterface = ({ activeMode, onApplyPrompt }) => {
     const [input, setInput] = useState('');
     const messagesEndRef = useRef(null);
     const { messages, isLoading, sendMessage, resetChat } = useAITuner(activeMode);
@@ -33,7 +33,7 @@ const ChatInterface = ({ activeMode }) => {
         <div className="flex flex-col h-full">
             <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
                 {messages.map(msg => (
-                    <MessageBubble key={msg.id} message={msg} />
+                    <MessageBubble key={msg.id} message={msg} onApply={onApplyPrompt} />
                 ))}
                 {isLoading && (
                     <div className="flex gap-3">

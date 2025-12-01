@@ -31,7 +31,7 @@ export const saveAPISettings = (settings) => {
 /**
  * Gemini APIを使用してAI応答を取得
  */
-export const getAIResponse = async (message, context = []) => {
+export const getAIResponse = async (message, history = []) => {
     const settings = getAPISettings();
 
     if (!settings.apiKey) {
@@ -42,6 +42,19 @@ export const getAIResponse = async (message, context = []) => {
     }
 
     try {
+        // 履歴をGeminiの形式に変換
+        // historyは { sender: 'user' | 'bot', text: string } の配列を想定
+        const contents = history.map(msg => ({
+            role: msg.sender === 'user' ? 'user' : 'model',
+            parts: [{ text: msg.text }]
+        }));
+
+        // 最新のメッセージを追加
+        contents.push({
+            role: 'user',
+            parts: [{ text: message }]
+        });
+
         const response = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${settings.apiKey}`,
             {
@@ -50,15 +63,7 @@ export const getAIResponse = async (message, context = []) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    contents: [
-                        {
-                            parts: [
-                                {
-                                    text: message
-                                }
-                            ]
-                        }
-                    ]
+                    contents: contents
                 })
             }
         );
