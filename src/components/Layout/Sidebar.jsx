@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { MessageSquare, Image, Video, History, Settings, Plus, ChevronDown, ChevronRight } from 'lucide-react';
+import { MessageSquare, Image, Video, History, Settings, Plus, ChevronDown, ChevronRight, X } from 'lucide-react';
 
-const Sidebar = ({ activeMode, onModeChange, onSettingsClick }) => {
+const Sidebar = ({ activeMode, onModeChange, onSettingsClick, onClose }) => {
     const [showHistory, setShowHistory] = useState(false);
     const [showTemplates, setShowTemplates] = useState(false);
 
@@ -12,11 +12,18 @@ const Sidebar = ({ activeMode, onModeChange, onSettingsClick }) => {
     ];
 
     return (
-        <div className="w-64 h-full glass-panel border-r border-white/10 flex flex-col">
-            <div className="p-6">
+        <div className="w-64 h-full glass-panel border-r border-white/10 flex flex-col bg-surface/95 backdrop-blur-xl">
+            <div className="p-6 flex items-center justify-between">
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
                     Prompt Tuner
                 </h1>
+                {/* Mobile Close Button */}
+                <button
+                    onClick={onClose}
+                    className="p-1 text-slate-400 hover:text-white lg:hidden"
+                >
+                    <X size={20} />
+                </button>
             </div>
 
             <div className="px-4 mb-6">
@@ -32,8 +39,8 @@ const Sidebar = ({ activeMode, onModeChange, onSettingsClick }) => {
                         key={item.id}
                         onClick={() => onModeChange(item.id)}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeMode === item.id
-                                ? 'bg-primary/20 text-blue-300 border border-blue-500/30'
-                                : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                            ? 'bg-primary/20 text-blue-300 border border-blue-500/30'
+                            : 'text-slate-400 hover:bg-white/5 hover:text-white'
                             }`}
                     >
                         <item.icon size={20} />
